@@ -1,0 +1,109 @@
+name: lab
+
+services:
+  # ============================================
+  # MySQL 8.0
+  # ============================================
+  mysql:
+    image: mysql:8.0
+    container_name: lab-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: lab1234
+      MYSQL_DATABASE: labdb
+      MYSQL_USER: lab
+      MYSQL_PASSWORD: lab1234
+    ports:
+      - "13306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ulab", "-plab1234"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ============================================
+  # Redis 7
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: lab-redis
+    command: redis-server --maxmemory 128mb
+    ports:
+      - "16379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ============================================
+  # Spring Boot App
+  # ============================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lab-app
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      # JVM 옵션 - 실험하면서 바꿔보기
+      JAVA_OPTS: >-
+        -Xms256m
+        -Xmx512m
+        -XX:MaxDirectMemorySize=256m
+        -XX:+UseG1GC
+        -Dcom.sun.management.jmxremote
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ============================================
+  # Prometheus
+  # ============================================
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: lab-prometheus
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=7d'
+    depends_on:
+      - app
+
+  # ============================================
+  # Grafana
+  # ============================================
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: lab-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/jvm-pool-lab.json
+    volumes:
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+      - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  mysql-data:
+  prometheus-data:
+  grafana-data:

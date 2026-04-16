@@ -1,0 +1,69 @@
+# ============================================
+# JVM Pool Lab - 풀 실험용 설정
+#
+# 여기 값을 바꾸면서 /monitor 로 결과를 관찰하세요.
+# ============================================
+
+server:
+  port: 8080
+  tomcat:
+    threads:
+      # ★ 실험: 이 값을 5, 10, 50, 200으로 바꿔보세요
+      # /load/thread-block 으로 스레드를 점유한 후
+      # 다른 API 호출이 느려지는 시점을 관찰
+      max: 20
+      min-spare: 5
+    # 커넥션 설정
+    connection-timeout: 5s
+    accept-count: 10  # 스레드 풀 다 차면 대기큐 크기
+    max-connections: 200
+
+spring:
+  # ============================================
+  # H2 In-Memory DB (MySQL 없어도 실험 가능)
+  # ============================================
+  datasource:
+    url: jdbc:h2:mem:labdb;DB_CLOSE_DELAY=-1;MODE=MYSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+    hikari:
+      # ★ 실험: 이 값을 2, 5, 10, 20으로 바꿔보세요
+      # /load/db-exhaust?connections=3 으로 커넥션 점유 후
+      # /load/db-query 호출 시 대기 시간 관찰
+      maximum-pool-size: 5
+      minimum-idle: 2
+      connection-timeout: 5000   # 5초 안에 커넥션 못 얻으면 에러
+      idle-timeout: 30000
+      pool-name: LabPool
+
+  # ============================================
+  # JPA
+  # ============================================
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+  # ============================================
+  # Redis (로컬 Redis 필요)
+  # docker run -d --name lab-redis -p 6379:6379 redis:7-alpine
+  # ============================================
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 3000ms
+
+# ============================================
+# Actuator
+# ============================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  metrics:
+    tags:
+      application: jvm-pool-lab

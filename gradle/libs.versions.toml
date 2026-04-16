@@ -1,0 +1,320 @@
+# ========================================
+# Gradle Version Catalog
+# ========================================
+# Central version management for all dependencies
+# Usage: implementation(libs.spring.boot.starter.web)
+# ========================================
+
+[versions]
+# ========================================
+# Spring & Framework
+# ========================================
+springBoot = "3.5.6"
+springDependencyManagement = "1.1.5"
+
+# ========================================
+# Database & Persistence
+# ========================================
+querydsl = "5.1.0"
+hibernate = "6.4.4.Final"
+flyway = "10.10.0"
+mysql = "8.0.33"
+h2 = "2.2.224"
+hikaricp = "5.1.0"
+
+# ========================================
+# Cache
+# ========================================
+caffeine = "3.1.8"
+
+# ========================================
+# Redis
+# ========================================
+redisson = "3.27.2"
+commonsPool2 = "2.12.0"
+
+# ========================================
+# Security (JWT)
+# ========================================
+jjwt = "0.12.6"
+
+# ========================================
+# AWS SDK
+# ========================================
+awsSdk = "2.25.11"
+springCloudAws = "3.1.1"
+
+# ========================================
+# Testing
+# ========================================
+junit = "5.10.2"
+assertj = "3.25.3"
+mockito = "5.11.0"
+testcontainers = "2.0.3"
+restAssured = "5.4.0"
+restdocs = "3.0.1"
+wiremock = "3.5.4"
+
+# ========================================
+# Architecture & Quality
+# ========================================
+archunit = "1.2.1"
+checkstyle = "10.14.0"
+spotbugs = "4.8.3"
+spotbugsPlugin = "6.0.9"
+jacoco = "0.8.11"
+pmd = "7.0.0"
+pmdPlugin = "6.55.0"
+spotless = "7.0.0.BETA4"
+googleJavaFormat = "1.22.0"
+asciidoctor = "3.3.2"
+
+# ========================================
+# API Documentation
+# ========================================
+springdoc = "2.5.0"
+
+# ========================================
+# Logging & Monitoring
+# ========================================
+logstashLogback = "8.1"
+micrometer = "1.12.4"
+
+# ========================================
+# Observability Starter (JitPack)
+# ========================================
+observabilityStarter = "v1.4.0"
+
+# ========================================
+# AuthHub SDK (JitPack)
+# ========================================
+authhubSdk = "v2.0.1"
+
+# ========================================
+# Sentry
+# ========================================
+sentry = "7.3.0"
+
+# ========================================
+# Resilience4j
+# ========================================
+resilience4j = "2.2.0"
+platformCommons = "v0.1.0"
+
+# ========================================
+# Utilities
+# ========================================
+commonsLang3 = "3.14.0"
+jackson = "2.17.0"
+uuidCreator = "6.0.0"
+
+[libraries]
+# ========================================
+# Spring Boot Starters
+# ========================================
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-batch = { module = "org.springframework.boot:spring-boot-starter-batch" }
+spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-boot-starter-oauth2-client = { module = "org.springframework.boot:spring-boot-starter-oauth2-client" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-boot-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc" }
+spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
+
+# ========================================
+# Spring Framework
+# ========================================
+spring-context = { module = "org.springframework:spring-context" }
+spring-tx = { module = "org.springframework:spring-tx" }
+spring-messaging = { module = "org.springframework:spring-messaging" }
+spring-security-test = { module = "org.springframework.security:spring-security-test" }
+spring-batch-test = { module = "org.springframework.batch:spring-batch-test" }
+
+# ========================================
+# QueryDSL
+# ========================================
+querydsl-jpa = { module = "com.querydsl:querydsl-jpa", version.ref = "querydsl" }
+querydsl-apt = { module = "com.querydsl:querydsl-apt", version.ref = "querydsl" }
+querydsl-sql = { module = "com.querydsl:querydsl-sql", version.ref = "querydsl" }
+
+# ========================================
+# Cache
+# ========================================
+caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
+
+# ========================================
+# Database
+# ========================================
+mysql-connector = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }
+h2 = { module = "com.h2database:h2", version.ref = "h2" }
+hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
+flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+flyway-mysql = { module = "org.flywaydb:flyway-mysql", version.ref = "flyway" }
+
+# ========================================
+# Redis
+# ========================================
+spring-boot-starter-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis" }
+commons-pool2 = { module = "org.apache.commons:commons-pool2", version.ref = "commonsPool2" }
+redisson-spring-boot-starter = { module = "org.redisson:redisson-spring-boot-starter", version.ref = "redisson" }
+
+# ========================================
+# Security (JWT)
+# ========================================
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+spring-security-crypto = { module = "org.springframework.security:spring-security-crypto" }
+
+# ========================================
+# AWS SDK v2
+# ========================================
+aws-bom = { module = "software.amazon.awssdk:bom", version.ref = "awsSdk" }
+aws-s3 = { module = "software.amazon.awssdk:s3" }
+aws-s3-transfer = { module = "software.amazon.awssdk:s3-transfer-manager" }
+aws-sqs = { module = "software.amazon.awssdk:sqs" }
+aws-apache-client = { module = "software.amazon.awssdk:apache-client" }
+aws-sts = { module = "software.amazon.awssdk:sts" }
+
+# ========================================
+# Spring Cloud AWS
+# ========================================
+spring-cloud-aws-sqs = { module = "io.awspring.cloud:spring-cloud-aws-starter-sqs", version.ref = "springCloudAws" }
+
+# ========================================
+# Testing
+# ========================================
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
+testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
+testcontainers-junit = { module = "org.testcontainers:testcontainers-junit-jupiter", version.ref = "testcontainers" }
+testcontainers-mysql = { module = "org.testcontainers:testcontainers-mysql", version.ref = "testcontainers" }
+
+testcontainers-localstack = { module = "org.testcontainers:testcontainers-localstack", version.ref = "testcontainers" }
+testcontainers-redis = { module = "com.redis:testcontainers-redis", version = "2.2.2" }
+snakeyaml = { module = "org.yaml:snakeyaml", version = "2.2" }
+rest-assured = { module = "io.rest-assured:rest-assured", version.ref = "restAssured" }
+spring-restdocs-mockmvc = { module = "org.springframework.restdocs:spring-restdocs-mockmvc", version.ref = "restdocs" }
+wiremock-standalone = { module = "org.wiremock:wiremock-standalone", version.ref = "wiremock" }
+
+# ========================================
+# Architecture Testing
+# ========================================
+archunit-junit5 = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }
+
+# ========================================
+# Code Quality
+# ========================================
+spotbugs-annotations = { module = "com.github.spotbugs:spotbugs-annotations", version.ref = "spotbugs" }
+
+# ========================================
+# API Documentation
+# ========================================
+springdoc-openapi = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+
+# ========================================
+# Logging & Monitoring
+# ========================================
+logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logstashLogback" }
+micrometer-prometheus = { module = "io.micrometer:micrometer-registry-prometheus" }
+
+# ========================================
+# Observability Starter (JitPack)
+# ========================================
+observability-adapter = { module = "com.github.ryu-qqq.observability-spring-boot-starter:adapter-in", version.ref = "observabilityStarter" }
+
+# ========================================
+# AuthHub SDK (JitPack)
+# ========================================
+authhub-sdk-core = { module = "com.github.ryu-qqq.AuthHub:authhub-sdk-core", version.ref = "authhubSdk" }
+
+# ========================================
+# Sentry
+# ========================================
+sentry-core = { module = "io.sentry:sentry", version.ref = "sentry" }
+sentry-spring-boot = { module = "io.sentry:sentry-spring-boot-starter-jakarta", version.ref = "sentry" }
+
+# ========================================
+# Resilience4j
+# ========================================
+resilience4j-circuitbreaker = { module = "io.github.resilience4j:resilience4j-circuitbreaker", version.ref = "resilience4j" }
+resilience4j-retry = { module = "io.github.resilience4j:resilience4j-retry", version.ref = "resilience4j" }
+resilience4j-micrometer = { module = "io.github.resilience4j:resilience4j-micrometer", version.ref = "resilience4j" }
+
+# ========================================
+# Platform Commons (Resilient Client SDK)
+# ========================================
+platform-commons-resilient-starter = { module = "com.github.ryu-qqq.spring-platform-commons:resilient-client-spring-boot-starter", version.ref = "platformCommons" }
+
+# ========================================
+# Utilities
+# ========================================
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang3" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind" }
+jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" }
+jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api", version = "3.0.2" }
+jakarta-persistence-api = { module = "jakarta.persistence:jakarta.persistence-api", version = "3.1.0" }
+uuid-creator = { module = "com.github.f4b6a3:uuid-creator", version.ref = "uuidCreator" }
+
+[bundles]
+# ========================================
+# Common Dependency Bundles
+# ========================================
+spring-web = [
+    "spring-boot-starter-web",
+    "spring-boot-starter-validation",
+    "jackson-databind",
+    "jackson-datatype-jsr310"
+]
+
+spring-data-jpa = [
+    "spring-boot-starter-data-jpa",
+    "hikaricp"
+]
+
+testing-basic = [
+    "junit-jupiter",
+    "assertj-core",
+    "mockito-core",
+    "mockito-junit"
+]
+
+testing-spring = [
+    "spring-boot-starter-test",
+    "spring-security-test"
+]
+
+testcontainers = [
+    "testcontainers-junit",
+    "testcontainers-mysql"
+]
+
+aws-s3 = [
+    "aws-s3",
+    "aws-s3-transfer",
+    "aws-apache-client"
+]
+
+observability = [
+    "spring-boot-starter-actuator",
+    "micrometer-prometheus",
+    "logstash-logback-encoder",
+    "observability-adapter",
+    "sentry-spring-boot"
+]
+
+[plugins]
+# ========================================
+# Gradle Plugins
+# ========================================
+spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "springDependencyManagement" }
+spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugsPlugin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+# Note: PMD is a core Gradle plugin, applied via `id("pmd")` in build.gradle.kts
