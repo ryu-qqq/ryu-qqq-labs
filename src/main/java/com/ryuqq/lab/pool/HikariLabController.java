@@ -196,6 +196,155 @@ public class HikariLabController {
         return result;
     }
 
+    // ── 실험 6: 커넥션 풀 Warming ──
+
+    /**
+     * 풀 웜업: 한꺼번에 많은 커넥션을 빌려서 max까지 채운 뒤 반납.
+     * 이후에는 요청이 와도 커넥션 생성 지연이 없음.
+     */
+    @PostMapping("/warm-up")
+    public Map<String, Object> warmUp() throws SQLException {
+        if (!(dataSource instanceof HikariDataSource hikari)) {
+            return Map.of("error", "HikariDataSource 아님");
+        }
+        int maxPool = hikari.getMaximumPoolSize();
+
+        long start = System.currentTimeMillis();
+        List<Connection> conns = new ArrayList<>();
+        try {
+            // max까지 전부 빌림 → 풀이 부족하면 새로 만듦
+            for (int i = 0; i < maxPool; i++) {
+                conns.add(dataSource.getConnection());
+            }
+        } finally {
+            // 전부 반납
+            for (Connection c : conns) {
+                try { c.close(); } catch (Exception ignored) {}
+            }
+        }
+        long elapsed = System.currentTimeMillis() - start;
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("warmedUpTo", maxPool + "개");
+        result.put("elapsedMs", elapsed);
+        result.put("poolStatus", getPoolStatus());
+        result.put("설명", "풀을 강제로 max까지 채운 뒤 전부 반납. " +
+                "이후에는 이미 만들어진 커넥션을 재사용하므로 " +
+                "첫 요청이 빠름. 서버 시작 직후 이 엔드포인트를 한 번 호출하면 웜업 효과.");
+        return result;
+    }
+
+    /**
+     * 커넥션 얻는 데 걸린 시간 측정.
+     * 콜드 풀: 새 커넥션 생성 → ~10ms
+     * 웜 풀: 기존 커넥션 재사용 → <1ms
+     */
+    @GetMapping("/acquire-time")
+    public Map<String, Object> acquireTime(@RequestParam(defaultValue = "5") int samples) throws SQLException {
+        List<Long> timings = new ArrayList<>();
+
+        for (int i = 0; i < samples; i++) {
+            long start = System.nanoTime();
+            try (Connection c = dataSource.getConnection()) {
+                // 아무것도 안 함 → 순수 커넥션 획득 시간만 측정
+            }
+            long elapsedUs = (System.nanoTime() - start) / 1000;
+            timings.add(elapsedUs);
+        }
+
+        long avg = (long) timings.stream().mapToLong(Long::longValue).average().orElse(0);
+        long max = timings.stream().mapToLong(Long::longValue).max().orElse(0);
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("samples", samples);
+        result.put("timingsUs", timings);
+        result.put("avgUs", avg);
+        result.put("maxUs", max);
+        result.put("설명", "콜드 풀이면 첫 샘플이 오래 걸림 (커넥션 생성: TCP+인증+세션초기화 ~10ms). " +
+                "웜 풀이면 전부 <1ms (단순히 풀에서 꺼내기).");
+        result.put("poolStatus", getPoolStatus());
+        return result;
+    }
+
+    // ── 실험 5: MySQL wait_timeout 시뮬레이션 ──
+
+    /**
+     * MySQL의 wait_timeout을 임의로 짧게 설정해서 커넥션이 끊기는 상황 재현.
+     * 세션 레벨로만 설정되므로 이 커넥션이 풀에 반납된 후 재사용될 때 영향.
+     */
+    @PostMapping("/set-mysql-timeout")
+    public Map<String, Object> setMysqlTimeout(@RequestParam(defaultValue = "10") int seconds) {
+        // 현재 세션의 wait_timeout 변경
+        // GLOBAL로 설정해야 모든 커넥션에 영향 (권한 필요)
+        try {
+            jdbcTemplate.execute("SET GLOBAL wait_timeout = " + seconds);
+            jdbcTemplate.execute("SET GLOBAL interactive_timeout = " + seconds);
+        } catch (Exception e) {
+            Map<String, Object> err = new LinkedHashMap<>();
+            err.put("error", e.getMessage());
+            err.put("hint", "GLOBAL 설정은 SUPER 권한 필요. DB 사용자 권한 확인.");
+            return err;
+        }
+
+        // 확인
+        Integer current = jdbcTemplate.queryForObject(
+                "SELECT @@global.wait_timeout", Integer.class);
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("waitTimeoutSeconds", current);
+        result.put("설명", "MySQL이 " + seconds + "초 이상 idle인 커넥션을 끊음. " +
+                "풀 안의 idle 커넥션이 " + seconds + "초 지나면 죽음. " +
+                "그 후 쿼리 날리면 Communications link failure. " +
+                "복구는 /pool/set-mysql-timeout?seconds=28800");
+        return result;
+    }
+
+    /**
+     * 커넥션을 N초 동안 idle 상태로 둔 후 쿼리.
+     * MySQL wait_timeout보다 길게 대기시키면 끊긴 커넥션을 만남.
+     */
+    @PostMapping("/test-stale-connection")
+    public Map<String, Object> testStaleConnection(@RequestParam(defaultValue = "15") int idleSeconds) {
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        // 먼저 커넥션을 한 번 빌리고 반납 (풀에 idle로 저장됨)
+        try {
+            jdbcTemplate.queryForObject("SELECT 1", Integer.class);
+        } catch (Exception e) {
+            result.put("initialQueryFailed", e.getMessage());
+        }
+
+        // idleSeconds 동안 대기
+        try {
+            Thread.sleep(idleSeconds * 1000L);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        // 다시 쿼리 시도 (풀에 있던 idle 커넥션을 재사용)
+        long start = System.currentTimeMillis();
+        String queryResult;
+        String error = null;
+        try {
+            Integer value = jdbcTemplate.queryForObject("SELECT 1", Integer.class);
+            queryResult = "성공: " + value;
+        } catch (Exception e) {
+            queryResult = "실패";
+            error = e.getClass().getSimpleName() + ": " + e.getMessage();
+        }
+        long elapsed = System.currentTimeMillis() - start;
+
+        result.put("idleWaitSeconds", idleSeconds);
+        result.put("queryResult", queryResult);
+        result.put("elapsedMs", elapsed);
+        if (error != null) result.put("error", error);
+        result.put("poolStatus", getPoolStatus());
+        result.put("설명", "MySQL wait_timeout보다 오래 idle이면 끊긴 커넥션. " +
+                "HikariCP의 keepaliveTime이 짧으면 주기적 ping으로 방어. " +
+                "connection-test-query로 빌려줄 때 검증도 가능.");
+        return result;
+    }
+
     // ── 유틸 ──
 
     private Map<String, Object> getPoolStatus() {
