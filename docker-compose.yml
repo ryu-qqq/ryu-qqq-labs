@@ -52,12 +52,17 @@ services:
     container_name: lab-app
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      # JVM 옵션 - 실험하면서 바꿔보기
+      # ★ GC 실험: 아래 JAVA_OPTS를 바꾸고 docker compose up -d --build app
+      # G1GC (기본):  -XX:+UseG1GC
+      # ZGC:          -XX:+UseZGC
+      # Serial:       -XX:+UseSerialGC
+      # 힙 크기:      -Xmx128m / -Xmx512m / -Xmx1g
       JAVA_OPTS: >-
         -Xms256m
         -Xmx512m
         -XX:MaxDirectMemorySize=256m
-        -XX:+UseG1GC
+        -XX:+UseZGC
+        -XX:+PrintCompilation
         -Dcom.sun.management.jmxremote
     ports:
       - "8080:8080"
