@@ -71,9 +71,9 @@
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
       "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "targets": [
-        { "expr": "tomcat_threads_current_threads", "legendFormat": "current" },
-        { "expr": "tomcat_threads_busy_threads", "legendFormat": "busy" },
-        { "expr": "tomcat_threads_config_max_threads", "legendFormat": "max (config)" }
+        { "expr": "tomcat_threads_current_threads{application=\"jvm-pool-lab\"}", "legendFormat": "current" },
+        { "expr": "tomcat_threads_busy_threads{application=\"jvm-pool-lab\"}", "legendFormat": "busy" },
+        { "expr": "tomcat_threads_config_max_threads{application=\"jvm-pool-lab\"}", "legendFormat": "max (config)" }
       ]
     },
     {

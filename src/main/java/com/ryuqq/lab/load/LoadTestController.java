@@ -1,5 +1,6 @@
 package com.ryuqq.lab.load;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.concurrent.*;
  */
 @RestController
 @RequestMapping("/load")
+@ConditionalOnBean(JdbcTemplate.class)
 public class LoadTestController {
 
     private final JdbcTemplate jdbcTemplate;

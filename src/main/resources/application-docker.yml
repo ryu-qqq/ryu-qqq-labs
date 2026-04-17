@@ -35,6 +35,11 @@ spring:
 # ============================================
 # Actuator - Prometheus 메트릭 노출
 # ============================================
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true  # 톰캣 스레드 메트릭 노출에 필요
+
 management:
   endpoints:
     web:

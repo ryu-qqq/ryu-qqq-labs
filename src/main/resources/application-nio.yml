@@ -1,0 +1,28 @@
+# ============================================
+# NIO 학습 전용 프로필
+#
+# DB, Redis 없이 NIO/ByteBuffer 실험만 가능
+# 실행: ./gradlew bootRun --args='--spring.profiles.active=nio'
+# ============================================
+
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+
+  datasource:
+    url: ""
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+management:
+  health:
+    db:
+      enabled: false
+    redis:
+      enabled: false
