@@ -18,3 +18,4 @@
 | 브랜치 | 주제 | 핵심 내용 | 문서 |
 |--------|------|----------|------|
 | `lab/nio-bytebuffer` | NIO & ByteBuffer | ByteBuffer 사이클, Tomcat NIO 구조 (Acceptor→Selector→Worker), Selector 에코서버, 스레드 고갈/버퍼 누수 실험 | [nio-bytebuffer-lab.md](docs/nio-bytebuffer-lab.md) |
+| `lab/gc-heap-tuning` | GC & JIT | G1GC vs ZGC 비교, 힙 크기별 GC 차이, JIT 웜업/탈출분석/인라이닝, Code Cache, 컨테이너 JVM 설정 | [gc-heap-tuning-lab.md](docs/gc-heap-tuning-lab.md) |
