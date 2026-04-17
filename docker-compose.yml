@@ -61,9 +61,15 @@ services:
         -Xms256m
         -Xmx512m
         -XX:MaxDirectMemorySize=256m
-        -XX:+UseZGC
+        -XX:+UseG1GC
+        -XX:MaxGCPauseMillis=200
         -XX:+PrintCompilation
         -Dcom.sun.management.jmxremote
+    # ★ 컨테이너 메모리 한도 (MaxRAMPercentage가 이걸 기준으로 힙 계산)
+    deploy:
+      resources:
+        limits:
+          memory: 2048m
     ports:
       - "8080:8080"
     depends_on:
