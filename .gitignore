@@ -15,3 +15,6 @@ Thumbs.db
 
 # Env
 .env
+
+# Playwright
+.playwright-mcp/
