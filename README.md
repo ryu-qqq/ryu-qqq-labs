@@ -29,5 +29,4 @@ setof-commerce 프로덕션 서버의 메모리/성능 이슈를 분석하다가
 | 03 | [풀은 서로 독립적이다](docs/03-pools-are-independent.md) | 스레드풀, 버퍼풀, 커넥션풀의 관계 |
 | 04 | [GC와 힙 튜닝](docs/04-gc-and-heap-tuning.md) | MaxRAMPercentage, OOM Kill, GC Pause |
 | 05 | [setof-commerce 성능 분석](docs/05-setof-commerce-analysis.md) | Prod 측정, N+1, HikariCP, ECS 메모리 |
-| 06 | [다음 실험 주제](docs/06-next-topics.md) | 풀 고갈, GC 관찰, 조합 실험 계획 |
 | 07 | [NIO & ByteBuffer 실험](docs/07-nio-bytebuffer-lab.md) | ByteBuffer, Tomcat NIO, Selector, 스트레스 테스트 |
