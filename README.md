@@ -28,5 +28,4 @@ setof-commerce 프로덕션 서버의 메모리/성능 이슈를 분석하다가
 | 02 | [Direct Buffer 심화](docs/02-direct-buffer-deep-dive.md) | 힙 vs 다이렉트, 복사 횟수, 풀링 원리 |
 | 03 | [풀은 서로 독립적이다](docs/03-pools-are-independent.md) | 스레드풀, 버퍼풀, 커넥션풀의 관계 |
 | 04 | [GC와 힙 튜닝](docs/04-gc-and-heap-tuning.md) | MaxRAMPercentage, OOM Kill, GC Pause |
-| 05 | [setof-commerce 성능 분석](docs/05-setof-commerce-analysis.md) | Prod 측정, N+1, HikariCP, ECS 메모리 |
 | 07 | [NIO & ByteBuffer 실험](docs/07-nio-bytebuffer-lab.md) | ByteBuffer, Tomcat NIO, Selector, 스트레스 테스트 |
