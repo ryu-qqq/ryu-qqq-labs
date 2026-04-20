@@ -25,6 +25,23 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true              # SQL 보기 좋게 포맷
+        # 배치 인서트 설정
+        jdbc:
+          batch_size: 50              # 배치 크기
+        order_inserts: true           # INSERT 순서대로 묶기
+        order_updates: true           # UPDATE도 묶기
+        batch_versioned_data: true    # @Version 엔티티도 배치
+        generate_statistics: true     # 통계 수집 (쿼리 수 측정용)
+        # 2차 캐시 활성화
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: jcache
+        javax:
+          cache:
+            provider: org.ehcache.jsr107.EhcacheCachingProvider
 
   data:
     redis:

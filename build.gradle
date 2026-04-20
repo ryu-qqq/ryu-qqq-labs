@@ -35,4 +35,8 @@ dependencies {
 
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'com.h2database:h2'
+
+    // Hibernate 2차 캐시 (EhCache + JCache)
+    implementation 'org.hibernate.orm:hibernate-jcache'
+    implementation 'org.ehcache:ehcache:3.10.8:jakarta'
 }
