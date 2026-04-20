@@ -20,3 +20,4 @@
 | `lab/nio-bytebuffer` | NIO & ByteBuffer | ByteBuffer 사이클, Tomcat NIO 구조 (Acceptor→Selector→Worker), Selector 에코서버, 스레드 고갈/버퍼 누수 실험 | [nio-bytebuffer-lab.md](docs/nio-bytebuffer-lab.md) |
 | `lab/gc-heap-tuning` | GC & JIT | G1GC vs ZGC 비교, 힙 크기별 GC 차이, JIT 웜업/탈출분석/인라이닝, Code Cache, 컨테이너 JVM 설정 | [gc-heap-tuning-lab.md](docs/gc-heap-tuning-lab.md) |
 | `lab/pool-exhaustion` | HikariCP & DB 풀 | 커넥션 고갈, 스레드풀+커넥션풀 조합, Leak Detection, wait_timeout 미스매치, 풀 Warming, DB 재시작 복구 | [pool-exhaustion-lab.md](docs/pool-exhaustion-lab.md) |
+| `lab/mysql-performance` | MySQL 성능 튜닝 | Bulk Insert (TPS 450배), flush_log 트레이드오프, Prepared Statement 캐싱, Buffer Pool Hit Rate, Slow Query Log | [mysql-performance-lab.md](docs/mysql-performance-lab.md) |
